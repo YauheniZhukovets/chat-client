@@ -7,12 +7,20 @@ import {Badge, Button, Card, Stack} from 'react-bootstrap';
 import {ChatItem} from './ChatItem';
 import Form from 'react-bootstrap/Form';
 import Accordion from 'react-bootstrap/Accordion';
+import {io, Socket} from 'socket.io-client'
+import {DefaultEventsMap} from '@socket.io/component-emitter';
 
+
+const ENDPOINT = process.env.REACT_APP_ENDPOINT || 'http://localhost:5000/'
+console.log(ENDPOINT)
+let socket: Socket<DefaultEventsMap, DefaultEventsMap>
+let selectedChatCompare: Chat
 
 export const ChatBox = React.memo(() => {
-    const {user, setChats, chats} = ChatState()
+    const {user, setChats, chats, selectedChat} = ChatState()
     const {id, chatId} = useParams<{ id: string, chatId: string }>()
     const [name, setName] = useState<string>('')
+    const [, setSocketConnected] = useState<boolean>(false)
 
     useEffect(() => {
         if (id && user) {
@@ -24,6 +32,21 @@ export const ChatBox = React.memo(() => {
         }
     }, [id, setChats, user])
 
+
+    useEffect(() => {
+        socket = io(ENDPOINT)
+        socket.emit('setup', user)
+        socket.on('connection', () => {
+            setSocketConnected(true)
+        })
+    }, [])
+
+    useEffect(() => {
+        if (selectedChat) {
+            socket.emit('join chat', selectedChat._id)
+            selectedChatCompare = selectedChat
+        }
+    }, [selectedChat])
 
     const onTypingHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value)
@@ -42,7 +65,7 @@ export const ChatBox = React.memo(() => {
     }
 
     return (
-        <Card style={{height: '80vh', overflowY: 'scroll', scrollbarWidth:'none'}}
+        <Card style={{height: '80vh', overflowY: 'scroll', scrollbarWidth: 'none'}}
               className="p-2"
         >
             <h2 className="text-center"><Badge bg="dark">Темы</Badge></h2>
@@ -78,6 +101,8 @@ export const ChatBox = React.memo(() => {
                                   id={id}
                                   index={i}
                                   chatId={chatId}
+                                  socket={socket}
+                                  selectedChatCompare={selectedChatCompare}
                         />
                     ))}
                 </Accordion>

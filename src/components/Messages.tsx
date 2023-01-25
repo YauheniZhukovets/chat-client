@@ -9,7 +9,6 @@ type MessagesType = {
     messages: Message[]
 }
 
-
 export const Messages: React.FC<MessagesType> = React.memo(({messages}) => {
     const {user} = ChatState()
 

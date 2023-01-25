@@ -7,16 +7,18 @@ import {Col, Container, Row} from 'react-bootstrap';
 import {Users} from '../components/Users';
 import {AppRouts} from '../components/AppRouts';
 
-function AppPage() {
+export const AppPage = React.memo(() => {
     const {setUsers, user} = ChatState()
 
     useEffect(() => {
-        getAllUsers().then((users) => {
-            setUsers(users.filter((u: User) => u._id !== user?._id))
-        }).catch(e => {
-            throw new Error(e.message)
-        })
-    }, [setUsers, user])
+        if (user) {
+            getAllUsers().then((users) => {
+                setUsers(users.filter((u: User) => u._id !== user?._id))
+            }).catch(e => {
+                throw new Error(e.message)
+            })
+        }
+    }, [user])
 
     return (
         <div>
@@ -37,10 +39,6 @@ function AppPage() {
                     </Col>
                 </Row>
             </Container>
-
         </div>
-
     )
-}
-
-export default AppPage
+})

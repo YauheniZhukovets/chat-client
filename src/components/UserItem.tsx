@@ -7,7 +7,7 @@ import {User} from '../interface/interface';
 type UserItemType = {
     user: User
 }
-export const UserItem: React.FC<UserItemType> = ({user}) => {
+export const UserItem: React.FC<UserItemType> = React.memo(({user}) => {
     const {pathname} = useLocation()
     const idFromUrl = pathname.replace('/', '')
 
@@ -20,4 +20,4 @@ export const UserItem: React.FC<UserItemType> = ({user}) => {
             </Button>
         </NavLink>
     )
-}
+})

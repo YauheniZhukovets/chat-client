@@ -9,12 +9,13 @@ type ChatProviderType = {
     children?: React.ReactNode
 }
 
-export const ChatProvider: React.FC<ChatProviderType> = ({children}) => {
+export const ChatProvider: React.FC<ChatProviderType> = React.memo(({children}) => {
     const navigate = useNavigate()
 
     const [user, setUser] = useState<User>()
     const [users, setUsers] = useState<User[]>()
     const [chats, setChats] = useState<Chat[]>()
+    const [selectedChat, setSelectedChat] = useState<Chat>()
 
 
     useEffect(() => {
@@ -34,10 +35,12 @@ export const ChatProvider: React.FC<ChatProviderType> = ({children}) => {
             setUser,
             chats,
             setChats,
+            setSelectedChat,
+            selectedChat
         }}>
             {children}
         </ChatContext.Provider>)
-}
+})
 
 
 export const ChatState = () => {

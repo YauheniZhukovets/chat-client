@@ -7,6 +7,8 @@ import {Messages} from './Messages';
 import {Form, Spinner} from 'react-bootstrap';
 import {fetchMessages, sendMessage} from '../http/messageAPI';
 import {ChatState} from '../context/ChatProvider';
+import {Socket} from 'socket.io-client';
+import {DefaultEventsMap} from '@socket.io/component-emitter';
 
 
 type ChatItemType = {
@@ -14,10 +16,12 @@ type ChatItemType = {
     id?: string
     index: number
     chatId?: string
+    socket: Socket<DefaultEventsMap, DefaultEventsMap>
+    selectedChatCompare: Chat
 }
 
-export const ChatItem: React.FC<ChatItemType> = React.memo(({chat, id, index, chatId}) => {
-    const {user} = ChatState()
+export const ChatItem: React.FC<ChatItemType> = React.memo(({chat, id, index, chatId, socket}) => {
+    const {user, chats, setSelectedChat} = ChatState()
     const [text, setText] = useState<string>('')
     const [messages, setMessages] = useState<Message[]>([])
     const [loading, setLoading] = useState<boolean>(false)
@@ -27,19 +31,26 @@ export const ChatItem: React.FC<ChatItemType> = React.memo(({chat, id, index, ch
             setLoading(true)
             fetchMessages(chatId).then((messages) => {
                 setMessages(messages)
+                setSelectedChat(chats.filter((chat: Chat) => chat._id === chatId)[0])
                 setLoading(false)
             }).catch(e => {
                 setLoading(false)
                 throw new Error(e.message)
             })
         }
-    }, [chatId])
+    }, [chatId, setSelectedChat])
 
+    useEffect(() => {
+        socket.on('message received', (newMessageReceived) => {
+            setMessages([...messages, newMessageReceived])
+        })
+    })
 
     const onEnterClickHandler = async (e: KeyboardEvent<HTMLTextAreaElement>) => {
         if (user && text.trim().length && e.key === 'Enter') {
             try {
                 const message = await sendMessage(user._id, chat._id, text.trim())
+                socket.emit('new message', message)
                 setMessages([...messages, message])
                 setText('')
             } catch (e: any) {

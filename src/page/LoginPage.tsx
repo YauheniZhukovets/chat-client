@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Button, Card, Container, Form} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 import {login} from "../http/authAPI";
-import {MAIN_ROUTE} from "../utils/consts";
+import {MAIN_ROUTE} from '../utils/consts';
 
 export const LoginPage = () => {
     const navigate = useNavigate()
@@ -12,11 +12,10 @@ export const LoginPage = () => {
         const user = JSON.parse(localStorage.getItem('userInfo')!)
         if (user) {
             navigate(MAIN_ROUTE)
-        } else return
+        }
     }, [navigate])
 
-    const submit = async (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault()
+    const submit = async () => {
         try {
             await login(name)
             navigate(MAIN_ROUTE)

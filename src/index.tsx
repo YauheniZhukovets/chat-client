@@ -2,16 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {AppPage} from './page/AppPage';
 import './index.css'
-import {BrowserRouter} from 'react-router-dom';
+import {HashRouter} from 'react-router-dom';
 import {ChatProvider} from './context/ChatProvider';
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 )
 root.render(
-    <BrowserRouter>
+    <HashRouter>
         <ChatProvider>
             <AppPage/>
         </ChatProvider>
-    </BrowserRouter>
+    </HashRouter>
 )

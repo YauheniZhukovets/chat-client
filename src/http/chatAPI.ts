@@ -7,6 +7,6 @@ export const createChat = async (nameChat: string, ownId: string, userId: string
 }
 
 export const fetchAllChats = async (ownId: string, userId: string) => {
-    const {data} = await $host.post<Chat[]>('chat/fetch', {ownId, userId})
+    const {data} = await $host.get<Chat[]>(`chat/fetch?ownId=${ownId}&userId=${userId}`)
     return data
 }

@@ -12,7 +12,6 @@ import {DefaultEventsMap} from '@socket.io/component-emitter';
 
 
 const ENDPOINT = process.env.REACT_APP_ENDPOINT || 'http://localhost:5000/'
-console.log(ENDPOINT)
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>
 let selectedChatCompare: Chat
 

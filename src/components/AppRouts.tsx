@@ -14,8 +14,10 @@ export const AppRouts = () => {
         <Routes>
             <Route path={LOGIN_ROUTE} element={<LoginPage/>}/>
             <Route path={MAIN_ROUTE} element={!user ? <Navigate to={LOGIN_ROUTE}/> : <ChatBox/>}>
-                <Route path={MAIN_ROUTE + ':id'} element={<ChatBox/>}>
-                    <Route path={MAIN_ROUTE + ':id' + CHAT_ROUTE + ':chatId'} element={<ChatBox/>}/>
+                <Route path={MAIN_ROUTE + ':id'} element={!user ? <Navigate to={LOGIN_ROUTE}/> : <ChatBox/>}>
+                    <Route path={MAIN_ROUTE + ':id' + CHAT_ROUTE + ':chatId'}
+                           element={!user ? <Navigate to={LOGIN_ROUTE}/> : <ChatBox/>}
+                    />
                 </Route>
             </Route>
             <Route path={ERROR_ROUTE} element={<ErrorPage/>}/>

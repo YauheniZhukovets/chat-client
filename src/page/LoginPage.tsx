@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Button, Card, Container, Form} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 import {login} from "../http/authAPI";
-import {MAIN_ROUTE} from '../utils/consts';
+import {MAIN_ROUTE} from "../utils/consts";
 
 export const LoginPage = () => {
     const navigate = useNavigate()
@@ -40,7 +40,7 @@ export const LoginPage = () => {
 
                     <div className='d-flex justify-content-center align-items-center mt-3 pl-3 pr-3'>
                         <Button variant='outline-primary'
-                                onClick={(e) => submit(e)}
+                                onClick={submit}
                                 disabled={!name.length}
                         >Войти
                         </Button>
